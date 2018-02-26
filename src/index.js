@@ -1,38 +1,43 @@
-function getZerosCount(number, base) {
+module.exports = function getZerosCount(number, base) {
     var primDel = [[]];
-    var delCounter = [];
+    var dev = [0];
     var n = base;
-    var curNumber;
     var i = 2;
+    var j = number;
+
     do {
         if (n % i === 0) {
             if (primDel[primDel.length - 1].indexOf(i) === -1 && primDel[primDel.length - 1].length) {
                 primDel.push([]);
+                dev.push(0);
             }
             primDel[primDel.length - 1].push(i);
             n /= i;
         } else {
             i++
         }
-    } while (n !== 1)
+    } while (n !== 1);
 
-    for (var k = 0; k < primDel.length; k++) {
-        delCounter.push([]);
-        for (var j = 0; j <= number; j++) {
-            curNumber = j;
-
-
-            console.log(curNumber, primDel[k][0])
-            do {
-                if (curNumber % primDel[k][0] === 0) {
-                    console.log('cur', curNumber)
-                    delCounter[k].push(primDel[k][0]);
-                    curNumber /= primDel[k][0];
+    for(var k = 0, max = primDel.length - 1; k <= max; k++){
+        var del = primDel[k][0];
+        j = number;
+        while(j >= 2){
+            var min = j;
+            if(!(min % del)){
+                while(!(min % del)){
+                    dev[k] +=  1;
+                    min /= del;
                 }
+                j -= del;
+            } else {
+                j--
             }
-            while (curNumber % primDel[k][0] && curNumber > 1)
-
         }
-    }//console.log(delCounter[0].length)
-}
-getZerosCount(16, 8);
+    }
+    for(var d  = primDel.length -  1; d > 0; d--){
+        dev[d] = Math.round(dev[d] / primDel[d].length);
+    }
+
+    dev = dev.sort(function(a,b){return a - b})[0];
+    return dev
+};
