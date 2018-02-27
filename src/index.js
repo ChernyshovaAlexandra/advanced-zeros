@@ -1,43 +1,45 @@
 module.exports = function getZerosCount(number, base) {
-    var primDel = [[]];
-    var dev = [0];
-    var n = base;
-    var i = 2;
-    var j = number;
+  let primDel = []; 
+  let dev = [];
+  let primDelCounter; 
+  let zerosCounter = [];
+  let n = base; 
+  let k, i, counter, cur;
+ 
 
-    do {
-        if (n % i === 0) {
-            if (primDel[primDel.length - 1].indexOf(i) === -1 && primDel[primDel.length - 1].length) {
-                primDel.push([]);
-                dev.push(0);
-            }
-            primDel[primDel.length - 1].push(i);
-            n /= i;
-        } else {
-            i++
-        }
-    } while (n !== 1);
-
-    for(var k = 0, max = primDel.length - 1; k <= max; k++){
-        var del = primDel[k][0];
-        j = number;
-        while(j >= 2){
-            var min = j;
-            if(!(min % del)){
-                while(!(min % del)){
-                    dev[k] +=  1;
-                    min /= del;
-                }
-                j -= del;
-            } else {
-                j--
-            }
-        }
+  i = 2;
+  do {
+    if (n % i === 0) {
+      primDel.push(i);
+      n /= i;
+    } else {
+      i++
     }
-    for(var d  = primDel.length -  1; d > 0; d--){
-        dev[d] = Math.round(dev[d] / primDel[d].length);
+  } while (n !== 1);
+  dev = primDel.filter((val,ind,arr) => arr.indexOf(val) === ind);
+  for(let l = 0; l < dev.length; l ++){
+    primDelCounter = 0;
+    for(let m = 0; m < primDel.length; m++){
+      if(primDel[m] === dev[l]){
+        primDelCounter++;
+      }
     }
+    counter = 0;
+    cur = 0;
+    k = 1;
+    while (true){
+      cur = Math.floor(number / Math.pow(dev[l], k));
+      if(cur > 0){
+        counter += cur;
+        k++;
+      } else{
+        break;
+      }
 
-    dev = dev.sort(function(a,b){return a - b})[0];
-    return dev
-};
+    }
+    zerosCounter.push(Math.floor(counter / primDelCounter));
+  }
+
+  zerosCounter.sort(function(a, b){return a - b});
+  return zerosCounter[0];
+}
